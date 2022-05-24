@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Dict, Any, List, Optional
+import csv
 
 
 def count_words(text: str) -> Dict[str, int]:
@@ -26,9 +27,35 @@ def count_words(text: str) -> Dict[str, int]:
              значение - количество вхождений слов в текст
     """
 
-    # пиши свой код здесь
+    punctuation_marks = {'.', ',', ':', '?', '!'}
+    ans = {}
+    words = text.split(' ')
+    while ' ' in words:
+        words.remove(' ')
 
-    return {}
+    while '' in words:
+        words.remove('')
+
+    for i, word in enumerate(words):
+        while words[i][-1] in punctuation_marks:
+            words[i] = words[i][:-1]
+        words[i] = words[i].lower()
+
+    for word in words:
+        flag = 0
+        for symbol in word:
+            if ('A' <= symbol <= 'Z') or ('a' <= symbol <= 'z'):
+                pass
+            else:
+                flag = 1
+                break
+        if flag == 0:
+            if word not in ans:
+                ans[word] = 1
+            else:
+                ans[word] += 1
+
+    return ans
 
 
 def exp_list(numbers: List[int], exp: int) -> List[int]:
@@ -40,9 +67,11 @@ def exp_list(numbers: List[int], exp: int) -> List[int]:
     :return: список натуральных чисел
     """
 
-    # пиши свой код здесь
+    for i, item in enumerate(numbers):
+        for j in range(exp - 1):
+            numbers[i] = numbers[i] * item
 
-    return []
+    return numbers
 
 
 def get_cashback(operations: List[Dict[str, Any]], special_category: List[str]) -> float:
@@ -104,7 +133,16 @@ def csv_reader(header: str) -> int:
     :param header: название заголовка
     :return: количество уникальных элементов в столбце
     """
+    dct = set()
+    index: int
+    with open(get_path_to_file()) as csv_file:
+        file = csv.reader(csv_file, delimiter=',')
+        for i, row in enumerate(file):
+            if i == 0:
+                for j, item in enumerate(row):
+                    if item == header:
+                        index = j
+            else:
+                dct.add(row[index])
 
-    # пиши свой код здесь
-
-    return 0
+    return len(dct)
