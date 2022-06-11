@@ -1,5 +1,5 @@
 from typing import Set
-from .employee import Employee, Manager
+from .employee import Employee, Manager, Developer
 from .exception import NoSuchMemberError
 
 
@@ -27,7 +27,9 @@ class Team:
         и инициализировать контейнер `__members`
         """
 
-        # пиши свой код здесь
+        self.name = name
+        self.manager = manager
+        self.__members = set()
 
     def add_member(self, member: Employee) -> None:
         """
@@ -35,15 +37,23 @@ class Team:
         Добавить можно только работника.
         """
 
-        # пиши свой код здесь
+        if type(member) != Employee and type(member) != Developer and type(member) != Manager:
+            raise TypeError
+
+        self.__members.add(member)
 
     def remove_member(self, member: Employee) -> None:
         """
         Задача: реализовать метод удаления участника из команды.
         Если в команде нет такого участника поднимается исключение `NoSuchMemberError`
         """
+        if type(member) != Employee and type(member) != Developer and type(member) != Manager:
+            raise TypeError
 
-        # пиши свой код здесь
+        if member not in self.__members:
+            raise NoSuchMemberError(self.name, member)
+
+        self.__members.remove(member)
 
     def get_members(self) -> Set[Employee]:
         """
@@ -51,7 +61,11 @@ class Team:
         чтобы из вне нельзя было поменять список участников внутри класса
         """
 
-        # пиши свой код здесь
+        tmp = self.__members.copy()
+        return tmp
+
+    def __str__(self):
+        return f'team: {self.name} manager: {self.manager.name} number of members: {len(self.get_members())}'
 
     def show(self) -> None:
         """
@@ -65,3 +79,4 @@ class Team:
         этого метода
         """
         print(self)
+
